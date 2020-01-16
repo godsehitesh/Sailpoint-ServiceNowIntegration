@@ -1,0 +1,43 @@
+caller_id : System Administrator
+Category :
+impact :
+urgency :
+Short description
+
+import requests
+
+url = 'https://www.w3schools.com/python/demopage.php'
+myobj = {'somekey': 'somevalue'}
+
+x = requests.post(url, data = myobj)
+
+print(x.text)
+
+
+
+
+import requests
+
+# Set the request parameters
+url = 'https://dev63380.service-now.com/api/now/table/incident'
+
+# Eg. User name="admin", Password="admin" for this code sample.
+user = 'admin'
+pwd = 'admin'
+
+# Set proper headers
+headers = {"Content-Type":"application/json","Accept":"application/json"}
+
+# Do the HTTP request
+response = requests.post(url, auth=(user, pwd), headers=headers ,data="{\"caller_id\":\"mukesh\",\"impact\":\"1\",\"urgency\":\"12\",\"short_description\":\"testing\",\"category\":\"software\"}")
+
+# Check for HTTP codes other than 200
+if response.status_code != 200: 
+    print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:',response.json())
+    exit()
+
+# Decode the JSON response into a dictionary and use the data
+data = response.json()
+print(data)
+
+-Read and Understood Various SOP that need to be follow while working on customer project.
