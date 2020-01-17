@@ -18,7 +18,15 @@ def raiseIncident():
         message = "Request Submitted!, Incident No. "+result
         return render_template('nextpage.html',message=message)
 
+@app.route('/getincidentstate',methods=["POST"])
+def getIncidentState():
+    incidentno = request.form['incidentno']
+    message = "Sorry! Request Not Submitted."
 
+    result = getIncidentState(incidentno)
+    if result:
+        message = "Incident State: "+result
+        return render_template('nextpage.html',message=message)
 
 
    # return "Hello World!" + category +" " + impact + " "+ urgency + " " +address
@@ -41,6 +49,29 @@ def firedApi(data):
     print(data['result']['number'])
     return data['result']['number']
 
+def getIncidentState(incidentno):
+    # Set the request parameters
+    url = 'https://dev65365.service-now.com/api/now/table/incident?sysparm_fields=state&sysparm_limit=1&number='+incidentno
+
+    # Eg. User name="admin", Password="admin" for this code sample.
+    user = 'Admin'
+    pwd = 'O9VSVifM2vos'
+
+    # Set proper headers
+    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+
+    # Do the HTTP request
+    response = requests.get(url, auth=(user, pwd), headers=headers)
+
+    # Check for HTTP codes other than 200
+    if response.status_code != 200:
+        print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:', response.json())
+        exit()
+
+    # Decode the JSON response into a dictionary and use the data
+    data = response.json()
+    print(data)
+    return data['result'][0]['state']
 
 if __name__ == '__main__':
     app.run(debug=True)
